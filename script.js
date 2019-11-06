@@ -64,9 +64,11 @@ const div = document.createElement('div');
 const textarea = document.createElement('textarea');
 const keyBoard = document.createElement('div');
 
+
 div.className = 'wrapper';
 keyBoard.className = 'keyboard';
 textarea.className = 'textarea';
+textarea.setAttribute('autofocus', 'true');
 
 document.body.appendChild(div);
 div.append(textarea);
@@ -126,10 +128,31 @@ for (let j = 0; j < keyboard.length; j++) {
 }
 
 
+// hover buttons on shift
+textarea.addEventListener('keydown', function (event) {
+  if (event.key != 'Shift') return;
+  text.forEach((el) => el.style.display = 'none');
+  textUp.forEach((el) => el.style.display = 'inline');
+});
+
+textarea.addEventListener('keyup', function (event) {
+  if (event.key != 'Shift') return;
+  text.forEach((el) => el.style.display = 'inline');
+  textUp.forEach((el) => el.style.display = 'none');
+
+});
+
 // hover buttons on virtual keybord
 textarea.addEventListener('keydown', () => {
   const element = document.querySelector('[data-key="' + event.key + '"]');
   element.parentElement.classList.add('hover');
+
+ if (event.key === 'Tab') {
+   textarea.value += "\t";
+   event.preventDefault()
+ } else if (event.key === 'Enter') {
+   textarea.value += "\n";
+ }
 });
 
 textarea.addEventListener('keyup', () => {
@@ -137,11 +160,14 @@ textarea.addEventListener('keyup', () => {
   element.parentElement.classList.remove('hover');
 });
 
+let text = document.querySelectorAll('.text');
+let textUp = document.querySelectorAll('.textup');
+text.forEach((el) => el.style.display = 'none');
+textUp.forEach((el) => el.style.display = 'inline');
+
 document.addEventListener('keydown', function (event) {
-  let text = document.querySelectorAll('.text');
-  let textUp = document.querySelectorAll('.textup');
+  if (event.key != 'CapsLock') return;
   let caps = event.getModifierState && event.getModifierState('CapsLock');
-  console.log(caps);
 
   if (caps) {
     text.forEach((el) => el.style.display = 'none');
@@ -150,28 +176,24 @@ document.addEventListener('keydown', function (event) {
     text.forEach((el) => el.style.display = 'inline');
     textUp.forEach((el) => el.style.display = 'none');
   }
+
 });
 
 const capslook = document.querySelector('.keybutton.caps');
-capslook.addEventListener('mousedown', function (event) {
-  let text = document.querySelectorAll('.text');
-  let textUp = document.querySelectorAll('.textup');
-  let caps = event.getModifierState && event.getModifierState('CapsLock');
-
-  if (caps) {
+capslook.addEventListener('click', () =>{
+  if (text[0].style.display === 'inline') {
     text.forEach((el) => el.style.display = 'none');
     textUp.forEach((el) => el.style.display = 'inline');
   } else {
     text.forEach((el) => el.style.display = 'inline');
     textUp.forEach((el) => el.style.display = 'none');
   }
+
 });
 
 
-
 // adding to input by click translation
-let text = document.querySelectorAll('.text');
-let textUp = document.querySelectorAll('.textup');
+
 
 keyBoard.addEventListener('mousedown', () => {
   let element = '';
@@ -188,12 +210,17 @@ keyBoard.addEventListener('mousedown', () => {
   } else if (element.className === 'keybutton shift') {
     text.forEach((el) => el.style.display = 'none');
     textUp.forEach((el) => el.style.display = 'inline');
-  } else if (element.className === 'keybutton caps' || element.className === 'keybutton alt' || element.className === 'keybutton ctrl' || element.className === 'keybutton tab') {
+  } else if (element.className === 'keybutton caps' || element.className === 'keybutton alt' || element.className === 'keybutton ctrl') {
     textarea.value += '';
+  } else if (element.className === 'keybutton enter') {
+    textarea.value += '\n';
+  } else if (element.className === 'keybutton tab') {
+    textarea.value += '\t';
   } else {
     textarea.value += element.innerText;
   }
   element.classList.add('hover');
+  
 });
 
 // if mouse click off
@@ -215,20 +242,4 @@ document.addEventListener('mouseup', () => {
     textUp.forEach((el) => el.style.display = 'none');
   }
 
-});
-
-textarea.addEventListener('keydown', function (event) {
-  if (event.key != 'Shift') return;
-  let shift = event.getModifierState && event.getModifierState('Shift');
-  console.log(shift);
-  text.forEach((el) => el.style.display = 'none');
-  textUp.forEach((el) => el.style.display = 'inline');
-});
-
-textarea.addEventListener('keyup', function (event) {
-  if (event.key != 'Shift') return;
-  let shift = event.getModifierState && event.getModifierState('Shift');
-  console.log(shift);
-  text.forEach((el) => el.style.display = 'inline');
-  textUp.forEach((el) => el.style.display = 'none');
 });
