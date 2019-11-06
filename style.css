@@ -44,7 +44,7 @@
   cursor: pointer;
 }
 
-.keyboard .keybutton:hover {
+.keyboard .keybutton.hover {
   border: 1px solid #000000;
   background-color: #ffffff;
   color: #000000;
@@ -74,7 +74,11 @@
   width: 65px;
 }
 
+.text{
+  display: inline;
+}
 .textup {
   display: none;
 }
+
 /*# sourceMappingURL=style.css.map */
