@@ -1,11 +1,12 @@
 // eng key lang
 
 const keyboardEng = [
-  ['`~', '1!', '2@', '3#', '4$', '5%', '6^', '7&', '8*', '9(', '0)', '-_', '=+', 
-  {
-    key: 'Backspace',
-    name: 'backsp'
-  }],
+  ['`~', '1!', '2@', '3#', '4$', '5%', '6^', '7&', '8*', '9(', '0)', '-_', '=+',
+    {
+      key: 'Backspace',
+      name: 'backsp'
+    }
+  ],
   [{
     key: 'Tab',
     name: 'tab'
@@ -136,8 +137,41 @@ textarea.addEventListener('keyup', () => {
   element.parentElement.classList.remove('hover');
 });
 
+document.addEventListener('keydown', function (event) {
+  let text = document.querySelectorAll('.text');
+  let textUp = document.querySelectorAll('.textup');
+  let caps = event.getModifierState && event.getModifierState('CapsLock');
+  console.log(caps);
+
+  if (caps) {
+    text.forEach((el) => el.style.display = 'none');
+    textUp.forEach((el) => el.style.display = 'inline');
+  } else {
+    text.forEach((el) => el.style.display = 'inline');
+    textUp.forEach((el) => el.style.display = 'none');
+  }
+});
+
+const capslook = document.querySelector('.keybutton.caps');
+capslook.addEventListener('mousedown', function (event) {
+  let text = document.querySelectorAll('.text');
+  let textUp = document.querySelectorAll('.textup');
+  let caps = event.getModifierState && event.getModifierState('CapsLock');
+
+  if (caps) {
+    text.forEach((el) => el.style.display = 'none');
+    textUp.forEach((el) => el.style.display = 'inline');
+  } else {
+    text.forEach((el) => el.style.display = 'inline');
+    textUp.forEach((el) => el.style.display = 'none');
+  }
+});
+
+
 
 // adding to input by click translation
+let text = document.querySelectorAll('.text');
+let textUp = document.querySelectorAll('.textup');
 
 keyBoard.addEventListener('mousedown', () => {
   let element = '';
@@ -147,12 +181,54 @@ keyBoard.addEventListener('mousedown', () => {
   } else {
     element = event.target;
   }
+  if (element.className === 'keybutton space') {
+    textarea.value += ' ';
+  } else if (element.className === 'keybutton backsp') {
+    textarea.value = textarea.value.slice(0, -1);
+  } else if (element.className === 'keybutton shift') {
+    text.forEach((el) => el.style.display = 'none');
+    textUp.forEach((el) => el.style.display = 'inline');
+  } else if (element.className === 'keybutton caps' || element.className === 'keybutton alt' || element.className === 'keybutton ctrl' || element.className === 'keybutton tab') {
+    textarea.value += '';
+  } else {
+    textarea.value += element.innerText;
+  }
   element.classList.add('hover');
-  textarea.innerHTML += element.innerText;
-  console.dir(element.className);
-})
+});
+
+// if mouse click off
 
 document.addEventListener('mouseup', () => {
+  let element = '';
   const keybutton = document.querySelectorAll('.hover');
   keybutton.forEach((el) => el.classList.remove('hover'));
+
+  if (event.target.className === 'keyboard' || event.target.className === 'row') return;
+  if (event.target.tagName === "SPAN") {
+    element = event.target.parentElement;
+  } else {
+    element = event.target;
+  }
+
+  if (element.className === 'keybutton shift') {
+    text.forEach((el) => el.style.display = 'inline');
+    textUp.forEach((el) => el.style.display = 'none');
+  }
+
+});
+
+textarea.addEventListener('keydown', function (event) {
+  if (event.key != 'Shift') return;
+  let shift = event.getModifierState && event.getModifierState('Shift');
+  console.log(shift);
+  text.forEach((el) => el.style.display = 'none');
+  textUp.forEach((el) => el.style.display = 'inline');
+});
+
+textarea.addEventListener('keyup', function (event) {
+  if (event.key != 'Shift') return;
+  let shift = event.getModifierState && event.getModifierState('Shift');
+  console.log(shift);
+  text.forEach((el) => el.style.display = 'inline');
+  textUp.forEach((el) => el.style.display = 'none');
 });
